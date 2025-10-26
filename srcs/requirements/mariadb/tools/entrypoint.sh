@@ -9,12 +9,12 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	echo "Initializing MariaDB database..."
 
 	# データベース初期化
-	mysqld --initialize-insecure --user=mysql --datadir="$DATADIR"
+	mariadb-install-db --user=mysql --datadir="$DATADIR" --skip-test-db
 
 	echo "Database initialized."
 
 	# 一時的にmysqldを起動
-	mysqld --user=mysql --skip-networking --socket="$SOCKET" &
+	mysqld --user=mysql --socket="$SOCKET" &
 	pid="$!"
 
 	# サーバが起動するまで待つ

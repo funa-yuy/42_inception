@@ -1,35 +1,44 @@
 services:
-  nginx:
-    build: ./requirements/nginx
-    restart: always
-    ports:
-      - 443:443
-    volumes:
-      - wordpress-data:/var/www/html
-    networks:
-      - inception-network
-
-  wordpress:
-    build: ./requirements/wordpress
-    restart: always
-    volumes:
-      - wordpress-data:/var/www/html
-    networks:
-      - inception-network
-
   mariadb:
     build: ./requirements/mariadb
     restart: always
+    init: true
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:
       - inception-network
     environment:
       MARIADB_ROOT_PASSWORD: rootpass # 管理者(ユーザー名はroot)のパスワード
-      MARIADB_DATABASE: defaultdb # デフォルトのDB
-      MARIADB_USER: dbuser # デフォルトの一般ユーザー
-      MARIADB_PASSWORD: dbpass # デフォルトの一般ユーザーのパスワード
+      MARIADB_DATABASE: example_db # データベース名
+      MARIADB_USER: example_user # 一般ユーザー
+      MARIADB_PASSWORD: example_password # 一般ユーザーのパスワード
 
+  wordpress:
+    build: ./requirements/wordpress
+    restart: always
+    init: true
+    ports:
+      - "8080:80" # localhost:8080 後で消す
+    volumes:
+      - wordpress-data:/var/www/html
+    networks:
+      - inception-network
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306 # データベースサーバ名：ポート番号
+      WORDPRESS_DB_NAME: example_db # WordPress用データベース名(dbの内容に合わせる)
+      WORDPRESS_DB_USER: example_user # WordPress用接続ユーザ名(dbの内容に合わせる)
+      WORDPRESS_DB_PASSWORD: example_password # WordPress用パスワード(dbの内容に合わせる)
+
+  nginx:
+    build: ./requirements/nginx
+    restart: always
+    init: true
+    ports:
+      - 443:443
+    volumes:
+      - wordpress-data:/var/www/html
+    networks:
+      - inception-network
 networks:
   inception-network:
     name: inception
