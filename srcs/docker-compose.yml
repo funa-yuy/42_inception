@@ -14,11 +14,11 @@ services:
       MARIADB_PASSWORD: example_password # 一般ユーザーのパスワード
 
   wordpress:
+    depends_on:
+      - mariadb
     build: ./requirements/wordpress
     restart: always
     init: true
-    ports:
-      - "8080:80" # localhost:8080 後で消す
     volumes:
       - wordpress-data:/var/www/html
     networks:
