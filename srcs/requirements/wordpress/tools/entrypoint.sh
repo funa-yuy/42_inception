@@ -4,23 +4,50 @@ echo "=== WordPress Entrypoint Start ==="
 
 WP_PATH="/var/www/html"
 
+# todo: ここ変える
+echo "Waiting for MariaDB to be ready..."
+  sleep 5
+
+echo "MariaDB is up!"
+
 # WordPressが未インストールならダウンロード
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	echo "WordPress not found — installing..."
 
-	# WordPress最新版をダウンロード
-	wget -q https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz
-	tar -xzf /tmp/wordpress.tar.gz -C /tmp
-	cp -R /tmp/wordpress/* "$WP_PATH"
+	cd $WP_PATH
 
-	# wp-config.phpを自動生成
-    cp "$WP_PATH/wp-config-sample.php" "$WP_PATH/wp-config.php"
+	# WordPressコアをダウンロード
+	wp core download --allow-root
 
- 	# 環境変数を使ってDB接続設定を自動置換
-	sed -i "s/database_name_here/${WORDPRESS_DB_NAME}/" "$WP_PATH/wp-config.php"
-	sed -i "s/username_here/${WORDPRESS_DB_USER}/" "$WP_PATH/wp-config.php"
-	sed -i "s/password_here/${WORDPRESS_DB_PASSWORD}/" "$WP_PATH/wp-config.php"
-	sed -i "s/localhost/${WORDPRESS_DB_HOST}/" "$WP_PATH/wp-config.php"
+	# wp-config.phpを生成
+	wp config create \
+		--dbname="$WORDPRESS_DB_NAME" \
+		--dbuser="$WORDPRESS_DB_USER" \
+		--dbpass="$WORDPRESS_DB_PASSWORD" \
+		--dbhost="$WORDPRESS_DB_HOST" \
+		--allow-root
+
+	# WordPressをインストール
+	wp core install \
+		--url="http://localhost:8080" \
+		--title="mfunakosのadmin Site" \
+		--admin_user="gx7k2m9p" \
+		--admin_password="admin_password" \
+		--admin_email="admin@example.com" \
+		--allow-root
+
+	# 2人目の一般ユーザーを追加
+	wp user create normal_user normal@example.com \
+		--role=subscriber \
+		--user_pass=normal_password \
+		--allow-root
+
+	# 日本語設定
+	wp language core install --allow-root --activate ja
+	# タイムゾーンと日時表記
+	wp option update --allow-root timezone_string 'Asia/Tokyo'
+	wp option update --allow-root date_format 'Y-m-d'
+	wp option update --allow-root time_format 'H:i'
 
 else
 	 echo "WordPress already installed, skipping setup."

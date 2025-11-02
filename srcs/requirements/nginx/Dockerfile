@@ -5,6 +5,6 @@ RUN apt-get update && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-# 後で443にする
-EXPOSE 8080
+# todo: 後で443にする
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
