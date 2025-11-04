@@ -3,6 +3,7 @@
 echo "=== WordPress Entrypoint Start ==="
 
 WP_PATH="/var/www/html"
+SITE_URL="${WORDPRESS_SITE_URL:-https://localhost}"
 
 # todo: ここ変える
 echo "Waiting for MariaDB to be ready..."
@@ -29,7 +30,7 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 
 	# WordPressをインストール
 	wp core install \
-		--url="http://localhost:8080" \
+		--url="$SITE_URL" \
 		--title="mfunakosのadmin Site" \
 		--admin_user="gx7k2m9p" \
 		--admin_password="admin_password" \

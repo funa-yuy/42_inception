@@ -36,13 +36,12 @@ services:
     restart: always
     init: true
     ports:
-      - 8080:80 # 後で443に変更する
+      - 443:443
     networks:
       - inception-network
     volumes:
       - wordpress-data:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/conf.d/default.conf
-      # - ./ssl:/etc/ssl
 networks:
   inception-network:
     name: inception

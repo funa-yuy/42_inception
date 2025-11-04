@@ -17,7 +17,7 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	mysqld --user=mysql --socket="$SOCKET" &
 	pid="$!"
 
-	# サーバが起動するまで待つ
+	# todo: ここ変える サーバが起動するまで待つ
 	sleep 5
 
 	 # データベースとユーザーを作成
