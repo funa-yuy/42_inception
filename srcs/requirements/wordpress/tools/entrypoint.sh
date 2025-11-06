@@ -25,16 +25,16 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	# WordPressをインストール
 	wp core install \
 		--url="$SITE_URL" \
-		--title="mfunakosのadmin Site" \
-		--admin_user="gx7k2m9p" \
-		--admin_password="admin_password" \
-		--admin_email="admin@example.com" \
+		--title="${WORDPRESS_SITE_TITLE}" \
+		--admin_user="${WORDPRESS_ADMIN_USER}" \
+		--admin_password="${WORDPRESS_ADMIN_PASSWORD}" \
+		--admin_email="${WORDPRESS_ADMIN_EMAIL}" \
 		--allow-root
 
 	# 2人目の一般ユーザーを追加
-	wp user create normal_user normal@example.com \
+	wp user create "${WORDPRESS_NORMAL_USER}" "${WORDPRESS_NORMAL_EMAIL}" \
 		--role=subscriber \
-		--user_pass=normal_password \
+		--user_pass="${WORDPRESS_NORMAL_PASSWORD}" \
 		--allow-root
 
 	# 日本語設定
