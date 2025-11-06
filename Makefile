@@ -6,7 +6,7 @@
 #    By: miyuu <miyuu@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/05 15:32:04 by miyuu             #+#    #+#              #
-#    Updated: 2025/11/06 13:59:15 by miyuu            ###   ########.fr        #
+#    Updated: 2025/11/06 18:09:42 by miyuu            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,19 +19,19 @@ COMPOSE_FILE = srcs/docker-compose.yml
 all: up
 
 build:
-	docker-compose -f ${COMPOSE_FILE} build --no-cache
+	docker compose -f ${COMPOSE_FILE} build --no-cache
 
 up:
-	docker-compose -f ${COMPOSE_FILE} up -d
+	docker compose -f ${COMPOSE_FILE} up -d
 
 down:
-	docker-compose -f ${COMPOSE_FILE} down
+	docker compose -f ${COMPOSE_FILE} down
 
 stop:
-	docker-compose -f ${COMPOSE_FILE} stop
+	docker compose -f ${COMPOSE_FILE} stop
 
 clean:
-	docker-compose -f ${COMPOSE_FILE} down
+	docker compose -f ${COMPOSE_FILE} down
 	docker system prune -f
 
 fclean: clean
