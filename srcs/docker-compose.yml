@@ -12,10 +12,16 @@ services:
       MARIADB_DATABASE: example_db # データベース名
       MARIADB_USER: example_user # 一般ユーザー
       MARIADB_PASSWORD: example_password # 一般ユーザーのパスワード
-
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "mariadb -u root -prootpass -e 'SELECT 1;'" ] # todo: rootpassを変数にする
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
   wordpress:
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     build: ./requirements/wordpress
     restart: always
     init: true

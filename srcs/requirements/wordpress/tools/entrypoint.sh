@@ -5,12 +5,6 @@ echo "=== WordPress Entrypoint Start ==="
 WP_PATH="/var/www/html"
 SITE_URL="${WORDPRESS_SITE_URL:-https://localhost}"
 
-# todo: ここ変える
-echo "Waiting for MariaDB to be ready..."
-  sleep 5
-
-echo "MariaDB is up!"
-
 # WordPressが未インストールならダウンロード
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	echo "WordPress not found — installing..."

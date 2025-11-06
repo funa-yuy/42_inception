@@ -17,8 +17,13 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	mysqld --user=mysql --socket="$SOCKET" &
 	pid="$!"
 
-	# todo: ここ変えるサーバが起動するまで待つ
+	# サーバーが起動するまで待つ
 	sleep 5
+	# echo "Waiting for MariaDB server to be ready..."
+	# until mysql --socket="$SOCKET" -u root -e "SELECT 1" >/dev/null 2>&1; do
+	# 	sleep 1
+	# done
+	# echo "MariaDB server is ready!"
 
 	 # データベースとユーザーを作成
 	mysql --socket="$SOCKET" -u root <<-EOSQL
