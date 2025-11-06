@@ -13,17 +13,16 @@ if [ ! -d "$DATADIR/mysql" ]; then
 
 	echo "Database initialized."
 
-	# 一時的にmysqldを起動
-	mysqld --user=mysql --socket="$SOCKET" &
+	# 一時的にmysqlを起動
+	mysqld --user=mysql --datadir="$DATADIR" --socket="$SOCKET" &
 	pid="$!"
 
 	# サーバーが起動するまで待つ
-	sleep 5
-	# echo "Waiting for MariaDB server to be ready..."
-	# until mysql --socket="$SOCKET" -u root -e "SELECT 1" >/dev/null 2>&1; do
-	# 	sleep 1
-	# done
-	# echo "MariaDB server is ready!"
+	echo "Waiting for MariaDB server to be ready..."
+	until mysql --socket="$SOCKET" -u root -e "SELECT 1" >/dev/null 2>&1; do
+		sleep 1
+	done
+	echo "MariaDB server is ready!"
 
 	 # データベースとユーザーを作成
 	mysql --socket="$SOCKET" -u root <<-EOSQL
