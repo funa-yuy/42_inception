@@ -15,5 +15,7 @@ RUN mkdir -p /etc/ssl/private /etc/ssl/certs && \
 	-addext "subjectAltName=DNS:localhost" && \
 	chmod 600 /etc/ssl/private/server.key
 
+COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
