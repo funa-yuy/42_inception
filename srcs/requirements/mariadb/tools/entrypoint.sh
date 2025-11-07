@@ -5,6 +5,18 @@ echo "=== MariaDB Entrypoint Start ==="
 DATADIR="/var/lib/mysql"
 SOCKET="/run/mysqld/mysqld.sock"
 
+# *_FILE から必ず読み取る。存在しなければ即終了。
+if [ -z "${MARIADB_ROOT_PASSWORD_FILE}" ] || [ ! -f "${MARIADB_ROOT_PASSWORD_FILE}" ]; then
+    echo "MARIADB_ROOT_PASSWORD_FILE is required and must point to an existing file" >&2
+    exit 1
+fi
+if [ -z "${MARIADB_PASSWORD_FILE}" ] || [ ! -f "${MARIADB_PASSWORD_FILE}" ]; then
+    echo "MARIADB_PASSWORD_FILE is required and must point to an existing file" >&2
+    exit 1
+fi
+export MARIADB_ROOT_PASSWORD="$(cat "${MARIADB_ROOT_PASSWORD_FILE}")"
+export MARIADB_PASSWORD="$(cat "${MARIADB_PASSWORD_FILE}")"
+
 if [ ! -d "$DATADIR/mysql" ]; then
 	echo "Initializing MariaDB database..."
 

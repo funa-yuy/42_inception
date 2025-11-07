@@ -1,3 +1,4 @@
 /mfunakos
 .env
 **/.DS_Store
+secrets/

@@ -5,6 +5,23 @@ echo "=== WordPress Entrypoint Start ==="
 WP_PATH="/var/www/html"
 SITE_URL="${WORDPRESS_SITE_URL:-https://localhost}"
 
+# *_FILE から必ず読み取る。存在しなければ即終了。
+if [ -z "${WORDPRESS_DB_PASSWORD_FILE}" ] || [ ! -f "${WORDPRESS_DB_PASSWORD_FILE}" ]; then
+    echo "WORDPRESS_DB_PASSWORD_FILE is required and must point to an existing file" >&2
+    exit 1
+fi
+if [ -z "${WORDPRESS_ADMIN_PASSWORD_FILE}" ] || [ ! -f "${WORDPRESS_ADMIN_PASSWORD_FILE}" ]; then
+    echo "WORDPRESS_ADMIN_PASSWORD_FILE is required and must point to an existing file" >&2
+    exit 1
+fi
+if [ -z "${WORDPRESS_NORMAL_PASSWORD_FILE}" ] || [ ! -f "${WORDPRESS_NORMAL_PASSWORD_FILE}" ]; then
+    echo "WORDPRESS_NORMAL_PASSWORD_FILE is required and must point to an existing file" >&2
+    exit 1
+fi
+export WORDPRESS_DB_PASSWORD="$(cat "${WORDPRESS_DB_PASSWORD_FILE}")"
+export WORDPRESS_ADMIN_PASSWORD="$(cat "${WORDPRESS_ADMIN_PASSWORD_FILE}")"
+export WORDPRESS_NORMAL_PASSWORD="$(cat "${WORDPRESS_NORMAL_PASSWORD_FILE}")"
+
 # WordPressが未インストールならダウンロード
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	echo "WordPress not found — installing..."
