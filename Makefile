@@ -6,7 +6,7 @@
 #    By: miyuu <miyuu@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/05 15:32:04 by miyuu             #+#    #+#              #
-#    Updated: 2025/11/06 18:09:42 by miyuu            ###   ########.fr        #
+#    Updated: 2025/11/07 15:49:56 by miyuu            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,11 +18,15 @@ COMPOSE_FILE = srcs/docker-compose.yml
 
 all: up
 
+up:
+	@if ! docker image inspect $(IMAGE_NAME) >/dev/null 2>&1; then \
+		echo "🛠️  Image not found. Building..."; \
+		docker compose -f ${COMPOSE_FILE} build; \
+	fi
+	docker compose -f ${COMPOSE_FILE} up -d
+
 build:
 	docker compose -f ${COMPOSE_FILE} build --no-cache
-
-up:
-	docker compose -f ${COMPOSE_FILE} up -d
 
 down:
 	docker compose -f ${COMPOSE_FILE} down
